@@ -3,9 +3,9 @@ import { map, filter } from 'rxjs/operators';
 
 let origin = ['a', 'b']
 let res: Array<{field: string, operator: string, value: string}> = [
-  {field: 'a', operator: 'ciao', value: 'nonono'},
-  {field: 'a', operator: 'ciao', value: 'nonono'},
   {field: 'b', operator: 'ciao', value: 'nonono'},
+  {field: 'a', operator: 'ciao', value: 'nonono'},
+  {field: 'a', operator: 'ciao', value: 'nonono'},
   {field: 'a', operator: 'ciao', value: 'nonono'},
 ]
 
@@ -30,5 +30,8 @@ function dynamicSort(property) {
         }        
     }
 }
+
+const distinct = [...new Set(res.map(x => x.field))]
+console.log(distinct)
 
 console.log(res.sort(dynamicSort("field")))
