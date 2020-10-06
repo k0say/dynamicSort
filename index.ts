@@ -31,6 +31,36 @@ function dynamicSort(property) {
     }
 }
 
+this.apiService.filters_GetFilter(this.filterSelected.id).subscribe(response => {
+          orderedFilter = response.filters.sort(this.helpers.dynamicSort("field"))
+          this.filterId = this.filterSelected.id;
+          this.getFilter();
+          if(response.filters.length > 0)  {
+            let reducedFilter = orderedFilter.reduce( (acc, obj) => {
+              let key = obj['field'];
+              if (!acc[key]) {
+                acc[key] = [];
+              }
+              acc[key].push(Helpers.getFilterOperator(obj.operator) + ` '${Helpers.getFilterValue(obj.value)}'`);
+              return acc;
+            }, {});
+            
+            let index = 0;
+            let value = '';
+            for(let field in reducedFilter) {
+              if (index === 0) {
+                value += Helpers.getFilterField(field) + ` ${reducedFilter[field]}`
+              } else {
+                value += ' e ' + Helpers.getFilterField(field) + ` ${reducedFilter[field]}`;
+              }
+              index++;
+            }
+            this.filterUsed = value.replace(/,/g, ' o ');
+          }
+
+          this.getItemGrid(this.filterId);
+        })
+
 const distinct = [...new Set(res.map(x => x.field))]
 console.log(distinct)
 
